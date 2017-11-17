@@ -3,6 +3,7 @@ package ipinfo
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 )
 
 type Info struct {
@@ -22,7 +23,10 @@ func Query(q string) (Info, error) {
 		return info, err
 	}
 	req.Header.Set("User-Agent", "curl")
-	res, err := http.DefaultClient.Do(req)
+	cli := http.Client{
+		Timeout: time.Second * 10,
+	}
+	res, err := cli.Do(req)
 	if err != nil {
 		return info, err
 	}
